@@ -25,7 +25,7 @@ object Id extends Id
 case class Couch(hostname: String, port: Int, auth: Option[(String, String)]) 
   extends Request(auth match {
     case None => :/(hostname, port)
-    case Some(x) => :/(hostname, port).as (x._1, x._2). <:< (Map("Authorization" -> (x._1 + ":" + x._2)))
+    case Some(x) => :/(hostname, port).as (x._1, x._2)
   }) 
 
 /** Factory for a CouchDB Request host with common parameters */
