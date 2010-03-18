@@ -42,7 +42,12 @@ case class Db(couch: Couch, name: String) extends Request(couch / name) with Js 
   def session = {
     this / "_session" ># ('name ! str)
   }
-  
+
+  /** create a doc from an object with the provided id */
+  def doc[T <: AnyRef](obj: T, id: String) = {
+    (this / id) <<< JsBean.toJSON(obj) >#  %('id ! str, 'rev ! str)
+  }
+ 
   /** create a doc from an object with auto id generation */
   def doc[T <: AnyRef](obj: T) = {
     this << JsBean.toJSON(obj) >#  %('id ! str, 'rev ! str)
