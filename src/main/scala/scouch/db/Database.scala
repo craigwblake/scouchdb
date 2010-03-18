@@ -25,7 +25,7 @@ object Id extends Id
 case class Couch(hostname: String, port: Int, auth: Option[(String, String)]) 
   extends Request(auth match {
     case None => :/(hostname, port)
-    case Some(x) => :/(hostname, port).as (x._1, x._2)
+    case Some(x) => :/(hostname, port) as_! (x._1, x._2)
   }) 
 
 /** Factory for a CouchDB Request host with common parameters */
@@ -230,6 +230,7 @@ case class Db(couch: Couch, name: String) extends Request(couch / name) with Js 
           fromJSON(JsString(x_), Some(clazz))
         } 
         else {
+          println( "Creating object " + clazz)
           val x = Symbol("value") ? obj
           val x(x_) = o
           fromJSON(x_, Some(clazz))
