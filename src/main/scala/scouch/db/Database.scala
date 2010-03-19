@@ -184,6 +184,10 @@ case class Db(couch: Couch, name: String) extends Request(couch / name) with Js 
       }
   }
 
+  def delete(id: String, rev: String) = {
+    (this / id DELETE) <<? Map("rev" -> rev)  >|
+  }
+
   /** fetch the view for the query. The query can be built using the dsl as 
       specified in <tt>ViewQuery</tt> */
   def view(v: Query) = {
