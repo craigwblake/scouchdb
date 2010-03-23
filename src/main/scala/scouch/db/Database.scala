@@ -22,17 +22,20 @@ trait Id extends Js {
 object Id extends Id
 
 /** Requests for a particular CouchDB host. */
-case class Couch(hostname: String, port: Int, auth: Option[(String, String)]) 
-  extends Request(auth match {
+case class Couch(hostname: String, port: Int, auth: Option[(String, String)], isSecure: Boolean) 
+  extends Request(Couch.secure( isSecure, auth match {
     case None => :/(hostname, port)
     case Some(x) => :/(hostname, port) as_! (x._1, x._2)
-  }) 
+  })) 
 
 /** Factory for a CouchDB Request host with common parameters */
 object Couch {
   def apply(): Couch = this("127.0.0.1")
-  def apply(hostname: String): Couch = Couch(hostname, 5984, None)
-  def apply(hostname: String, user: String, pass: String): Couch = Couch(hostname, 5984, Some((user, pass)))
+  def apply(hostname: String): Couch = Couch(hostname, 5984, None, false)
+  def apply(hostname: String, user: String, pass: String): Couch = Couch(hostname, 5984, Some((user, pass)), false)
+
+  /** Use HTTPS for secure connections */
+  def secure( isSecure: Boolean, req: Request) = isSecure match { case true => req secure case false => req}
 }
 
 /** Requests on a particular database and CouchDB host. */
