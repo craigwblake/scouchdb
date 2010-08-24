@@ -135,7 +135,19 @@ case class Db(couch: Couch, name: String) extends Request(couch / name) with Js 
         case (_, _, x) => (null, null, x.asInstanceOf[T])
       }
     }
-  
+
+  /** get an entity of native JSON objects based on its id. Returns a 
+      <tt>Tuple3</tt> of <tt>(id, ref, JsObject)</tt> */
+  def getJson(id: String) = 
+    this / encode(id, Request.factoryCharset) ># {
+      case s@_ => 
+        val (id, ref) = getIdAndRef(s)
+        (id, ref, s) match {  
+        case (Some(i), Some(r), x) => (i, r, x)
+        case (_, _, x) => (null, null, x)
+      }
+    }
+ 
   /** get an entity of type <tt>T</tt> based on its id. Returns a 
       <tt>Tuple3</tt> of <tt>(id, ref, T)</tt> */
   def get[T](id: String)(implicit m: Manifest[T]) = 
