@@ -287,7 +287,12 @@ case class Doc(val db: Db, val id: String) extends Request(db / encode(id, Reque
   def add[T <: AnyRef](obj: T) = {
     this <<< JsBean.toJSON(obj) >|
   }
-  
+
+  /** add an object (bean) to the document */
+  def addJson(json: JsObject) = {
+    this <<< json >|
+  }
+
   /** add attachment to a document. None as the <tt>rev</tt> will create a new document
       as well */
   def attach(attachmentId: String, contentType: String, data: Array[Byte], rev: Option[String]) = rev match {
