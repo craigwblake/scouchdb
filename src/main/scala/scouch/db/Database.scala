@@ -290,7 +290,7 @@ case class Doc(val db: Db, val id: String) extends Request(db / encode(id, Reque
 
   /** add an object (bean) to the document */
   def addJson(json: JsObject) = {
-    this <<< json >|
+    this <<< json.toString >|
   }
 
   /** add attachment to a document. None as the <tt>rev</tt> will create a new document
